@@ -1,0 +1,80 @@
+{% extends 'layout/theme' %}
+
+{% block content %}
+<section class="container mx-auto px-4 pt-8 pb-12 sm:py-12">
+    <h1 class="text-3xl font-bold text-center">
+        {{ 'cart.general.title' | t }}
+    </h1>
+    <div class="text-center mt-2 sm:mt-4">
+        <a href="/" class="border-b border-gray-800 text-gray-800 hover:text-gray-700 hover:border-gray-700" v-show="$root.cart.item_count > 0">
+			{{ 'cart.general.continue_shopping' | t }}
+        </a>
+    </div>
+    <div v-show="$root.cart.item_count > 0">
+        <table class="w-full mt-12 text-gray-800">
+            <thead>
+                <tr class="uppercase text-sm border-b">
+                    <th class="font-normal text-left py-3 sm:py-6">{{ 'cart.label.product' | t }}</th>
+                    <th class="font-normal text-right py-3 sm:py-6">{{ 'cart.label.price' | t }}</th>
+                    <th class="font-normal text-center py-3 sm:py-6 hidden sm:table-cell">{{ 'cart.label.quantity' | t }}</th>
+                    <th class="font-normal text-right py-3 sm:py-6 hidden sm:table-cell">{{ 'cart.label.total' | t }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border-b" v-for="item in $root.cart.items">
+                    <td class="py-3 sm:py-6">
+                        <div class="flex items-center">
+                            <a :href="item.url">
+                                <img class="w-12 sm:w-24" :src="item.image.replace('/1024x1024/', '/192x192/')">
+                            </a>
+                            <div class="ml-4 sm:ml-8">
+                                <div>
+                                    <a
+                                        :href="item.url"
+                                        class="font-bold text-black border-b border-transparent hover:border-black text-sm sm:text-base"
+                                        v-text="item.title"
+                                    ></a>
+                                </div>
+                                <a href="#remove" @click="updateCartRow(item, 'remove')" class="mt-1 underline hover:text-gray-700 text-sm sm:text-base">{{ 'cart.general.remove' | t }}</a>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-right py-3 sm:py-6 hidden sm:table-cell" v-text="$root.money(item.line_price)"></td>
+                    <td class="text-center py-3 sm:py-6">
+                        <div class="sm:hidden text-right mb-2 text-sm"v-text="$root.money(item.line_price)"></div>
+                        <div class="flex items-center justify-end sm:justify-center">
+                            <div class="sm:hidden text-xs mr-2">
+                                {{ 'cart.label.qty' | t }}
+                            </div>
+                            <input type="number" :value="item.quantity" @change="changeCartQuantity($event, item)" class="border rounded-sm py-2 px-4 w-16 sm:w-20">
+                        </div>
+                    </td>
+                    <td class="text-right py-3 sm:py-6  hidden sm:table-cell" v-text="$root.money(item.price)"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="flex justify-center sm:justify-end text-gray-800 mt-10">
+            <p>
+                {{ 'cart.general.subtotal' | t }}
+            </p>
+            <p class="ml-8" v-html="$root.money(cart.total_price)"></p>
+        </div>
+        <div class="text-center sm:text-right text-xs text-gray-800 mt-2">
+            {{ 'cart.general.shipping_at_checkout' | t }}
+        </div>
+        <div class="text-right mt-10">
+            <a href="/checkout" class="inline-block text-center w-full sm:w-auto uppercase bg-black hover:bg-gray-800 py-3 sm:py-2 px-4 text-white text-sm font-medium rounded-sm">
+                {{ 'cart.general.checkout' | t }}
+            </a>
+        </div>
+    </div>
+    <div class="mt-4 text-center" v-show="$root.cart.item_count < 1" style="display:none">
+    	<p>
+			{{ 'cart.general.empty' | t }}
+        </p>
+        <a href="/" class="mt-8 w-full sm:w-auto inline-block uppercase bg-black hover:bg-gray-800 py-3 sm:py-2 px-4 text-white text-sm font-medium rounded-sm">
+            {{ 'cart.general.continue_shopping' | t }}  {{ 'fal fa-long-arrow-right' | fa: 'fa-lg ml-2' }}
+        </a>
+    </div>
+</section>
+{% endblock %}

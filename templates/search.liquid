@@ -1,0 +1,36 @@
+{% extends 'layout/theme' %}
+
+{% block content %}
+<section class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold text-center">
+    	{{ 'general.search.results_with_count' | t: count: search.results_count, terms: search.terms }}
+    </h1>
+	{% if search.results_count == 0 %}
+    <p class="text-center py-4 text-gray-800">
+    	{{ 'general.search.no_results' | t }}
+    </p>
+	{% endif 0%}
+    <form actions="search" class="mt-4 max-w-xl mx-auto flex">
+    	<input
+        	class="flex-1 px-4 border border-r-0 border-gray-500 text-gray-800 rounded-l-sm"
+            name="q"
+            type="search"
+            placeholder="{{ 'general.search.placeholder' | t }}"
+            value="{{ search.terms }}"
+        >
+        <button class="bg-black hover:bg-gray-800 text-white py-3 px-5 rounded-r-sm">
+        	{{ 'far fa-search'| fa }}
+        </button>
+    </form>
+</section>
+{% if search.results_count > 0 %}
+<div class="h-px bg-gray-300"></div>
+<section class="container mx-auto px-2 py-8">
+    <div class="flex flex-wrap">
+        {% for product in search.results %}
+            {% include 'collection-item' %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

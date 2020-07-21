@@ -1,0 +1,105 @@
+{% extends 'layout/theme' %}
+
+{% block content %}
+<section class="bg-right bg-no-repeat" style="background-color: {{ settings.homepage_hero_bg_color }};background-image: url({{ settings.homepage_hero_image }})">
+    <div class="container mx-auto px-4 py-40 md:py-56 flex flex-col justify-center index-banner">
+        <div class="text-white text-shadow-md text-center md:text-left">
+            <h1 class="font-bold text-3xl md:text-5xl text-white text-shadow">
+                {{ 'homepage.hero.title' | t }}
+            </h1>
+            <h3 class="max-w-md md:text-lg leading-relaxed mx-auto md:mx-0">
+				{{ 'homepage.hero.text' | t }}
+            </h3>
+        </div>
+    </div>
+</section>
+
+<section class="container mx-auto px-4 py-8 flex flex-wrap items-center">
+	{% assign product = all_products | get: settings.homepage_featured_product_handle %}
+	<div class="w-full md:w-1/2 pr-4">
+    	<a href="#">
+    		<div class="bg-cover bg-bottom" style="padding-top: 100%; background-image: url({{ settings.homepage_featured_product_image }})"></div>
+        </a>
+    </div>
+    <div class="w-full md:w-1/2 pl-4 text-center md:text-left">
+    	<h3 class="text-2xl font-bold">
+        	{{ 'homepage.product.title' | t }}
+        </h3>
+        <p class="text-xl font-semibold mt-1 text-gray-800">
+        	{{ product.price | money }}
+        </p>
+        <p class="mt-2 leading-relaxed text-gray-800">
+        	{{ 'homepage.product.text' | t }}
+        </p>
+        <a href="{{ product.url }}" class="mt-6 bg-black hover:bg-gray-800 py-3 px-6 text-white inline-block rounded-sm text-sm uppercase">
+			{{ 'homepage.product.button_text' | t }}
+        </a>
+    </div>
+</section>
+
+<section class="container mx-auto px-2 md:px-0 py-4 flex flex-wrap">
+	{% for article in blogs.blog.articles | limit: 3%}
+	<div class="w-full md:w-1/3 p-2 md:p-4">
+    	<a href="/blog/{{ article.handle }}">
+        	<div class="relative" style="padding-top: 100%">
+            	<img class="lazyload object-cover absolute inset-0 w-full h-full" data-src="{{ article.image | replace: 'cdn.', 'files.' }}?width=790" alt="{{ article.title }}">
+            </div>
+            <h4 class="mt-4 text-lg font-bold">
+				{{ article.title }}
+            </h4>
+            <p class="mt-2 text-gray-800">
+            	{{ article.excerpt }}
+            </p>
+        </a>
+    </div>
+    {% endfor %}
+</section>
+
+<section class="container mx-auto px-2 py-8">
+	{% assign collection = collections | get: settings.homepage_featured_collection_handle %}
+    <div class="px-2 py-8">
+        <h2 class="text-xl font-bold text-gray-800 uppercase text-center">
+            {{ collection.title }}
+        </h2>
+    </div>
+    <div class="flex flex-wrap justify-center">
+        {% for product in collection.products %}
+            {% include 'collection-item' %}
+        {% endfor %}
+    </div>
+</section>
+
+<section class="bg-center bg-no-repeat relative">
+	<img class="lazyload absolute inset-0 object-cover w-full h-full" data-src="{{ settings.homepage_banner_image }}" alt="banner background image">
+    <div class="relative" style="background-color: rgba(0,0,0,0.5)">
+        <div class="container mx-auto px-4 py-8 flex flex-col items-center justify-center" style="min-height: 400px">
+            <div class="text-white text-shadow-md text-center">
+                <h2 class="font-bold text-5xl text-white text-shadow">
+        			{{ 'homepage.banner.title' | t }}
+                </h2>
+                <h3 class="max-w-md text-lg leading-relaxed">
+                	{{ 'homepage.banner.text' | t }}
+                    
+                </h3>
+            </div>
+        </div>
+	</div>
+</section>
+
+<section class="container mx-auto py-12 flex flex-wrap justify-center">
+	{% for review in data_objects.reviews.objects %}
+	<div class="w-full lg:w-1/3 p-4 text-center max-w-sm">
+    	<div class="text-xl">
+        	{{ 'fad fa-quote-left' | fa | replace: '<style>.fa-secondary{opacity:.4}</style>', '' }}
+        </div>
+    	<div class="mt-2 text-gray-800">
+        	{{ review.text }}
+        </div>
+        <img class="lazyload mt-6 mx-auto w-12 h-12 object-cover object-top rounded-full" data-src="{{ review.image }}"  alt="{{ review.name }} profile image">
+        <div class="mt-2 text-gray-800 text-sm">
+        	&mdash; {{ review.name }}
+        </div>
+    </div>
+    {% endfor %}
+</section>
+{% endblock %}

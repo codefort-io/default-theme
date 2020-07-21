@@ -1,0 +1,24 @@
+{% extends 'layout/theme' %}
+
+{% block content %}
+<section class="container mx-auto max-w-3xl px-4 py-8">
+    <h1 class="text-3xl md:text-4xl font-bold text-center">
+        {{ article.title }}
+    </h1>
+    <p class="text-sm text-center text-gray-800">
+    	{% assign date = article.created_at | date: '%d/%m %Y' %}
+    	{{ 'blogs.article.subtext' | t: author: article.author, date: date }}
+    </p>
+    {% if article.image %}
+	<img class="w-full mt-12" src="{{ article.image }}" alt="{{ article.title }} image">
+    {% endif %}
+    <div class="mt-12 prose-sm md:prose max-w-full md:max-w-full">
+		{{ article.content }}
+    </div>
+    <div class="text-center">
+        <a href="{% if blog.handle == 'blog' %}/blog{% else %}{{ blog.url }}{% endif %}" class="mt-12 inline-block text-center text-sm uppercase font-semibold bg-white border border-black py-3 px-6 w-full max-w-xs sm:w-auto">
+            {{ 'fal fa-long-arrow-left' | fa: 'mr-2 fa-lg' }} {{ 'blogs.article.back_to_blog' | t: title: blog.title }}
+        </a>
+    </div>
+</section>
+{% endblock %}

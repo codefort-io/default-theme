@@ -1,0 +1,112 @@
+{
+  "general": {
+    "404": {
+      "title": "404 Side ikke fundet",
+      "subtext": "Den ønskede side findes ikke.",
+      "link": "Tilbage til butikken"
+    },
+    "search": {
+      "results_with_count": {
+        "one": "{{ count }} resultat for \"{{ terms }}\"",
+        "other": "{{ count }} resultater for \"{{ terms }}\""
+      },
+      "no_results": "Kontrollér stavemåden, eller prøv andre ord.",
+      "placeholder": "Søg"
+    },
+    "filters": {
+      "show_more": "Vis mere",
+      "show_less": "Vis mindre"
+    }
+  },
+  "blogs": {
+    "article": {
+      "subtext": "Skrevet af {{ author }} — {{ date }}",
+      "back_to_blog": "Tilbage til {{ title }}"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Din indkøbskurv",
+      "remove": "Fjern",
+      "subtotal": "Subtotal",
+      "shipping_at_checkout": "Levering beregnes ved betaling",
+      "checkout": "Gå til betaling",
+      "empty": "Din indkøbskurv er tom.",
+      "continue_shopping": "Tilbage til butikken"
+    },
+    "label": {
+      "product": "Produkt",
+      "price": "Pris",
+      "quantity": "Antal",
+      "qty": "Antal",
+      "total": "I alt"
+    }
+  },
+  "contact": {
+    "form": {
+      "name": "Navn",
+      "email": "E-mail",
+      "order_number": "Ordrenummer",
+      "message": "Besked",
+      "submit": "Send",
+      "post_success": "Vi takker for din henvendelse. Vi kontakter dig så hurtigt som muligt."
+    }
+  },
+  "homepage": {
+    "hero": {
+      "title": "Image with text overlay",
+      "text": "Use overlay text to give your customers insight into your brand. Select imagery and text that relates to your style and story."
+    },
+    "product": {
+      "title": "Image with text overlay",
+      "text": "Use overlay text to give your customers insight into your brand. Select imagery and text that relates to your style and story.",
+      "button_text": "More info"
+    },
+    "banner": {
+      "title": "Image with text overlay",
+      "text": "Use overlay text to give your customers insight into your brand. Select imagery and text that relates to your style and story."
+    }
+  },
+  "layout": {
+    "navigation": {
+      "links": [
+      	{
+        	"url": "/",
+        	"title": "Forside"
+        },
+      	{
+        	"url": "/collections/featured",
+        	"title": "Featured"
+        }
+      ]
+    },
+    "cart": {
+      "title": "Indkøbskurv",
+      "items_count": {
+        "one": "vare",
+        "other": "varer"
+      }
+    },
+    "customer": {
+      "account": "Konto",
+      "log_out": "Log af",
+      "log_in": "Log ind",
+      "create_account": "Opret konto"
+    },
+    "footer": {
+      "social_platform": "{{ name }} på {{ platform }}"
+    }
+  },
+  "products": {
+    "product": {
+      "regular_price": "Normalpris",
+      "sold_out": "Udsolgt",
+      "unavailable": "Ikke tilgængelig",
+      "on_sale": "Udsalg",
+      "quantity": "Antal",
+      "add_to_cart": "Læg i indkøbskurv",
+      "include_taxes": "Inklusive moms.",
+      "none": "Ikke valgt"
+    }
+  }
+}

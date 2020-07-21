@@ -1,0 +1,9 @@
+{
+    "dependencies": {
+        "vue": "^2.6.10",
+        "jquery-slim": "^3.0.0",
+        "axios": "^0.19.2",
+        "lodash": "^4.17.19",
+        "lazysizes": "^5.2.2"
+    }
+}

@@ -1,0 +1,72 @@
+{% extends 'layout/theme' %}
+
+{% block content %}
+<section class="container mx-auto max-w-3xl px-4 py-8">
+    <h1 class="text-3xl md:text-4xl font-bold text-center">
+        {{ page.title }}
+    </h1>
+    <div class="mt-12 max-w-full md:max-w-full">
+    	{% if sent %}
+        	<div class="bg-green-100 border border-green-600 p-4 rounded-sm mb-4 text-green-900">
+            	{{ 'fad fa-envelope-open-text' | fa: 'fa-lg mr-2' }}
+            	{{ 'contact.form.post_success' | t }}
+            </div>
+    	{% endif %}
+		<form action="/contact" method="POST">
+
+			<div class="flex flex-wrap -mx-2">
+                <div class="w-full sm:w-1/2 px-2">
+                    <label class="block">{{ 'contact.form.name' | t }}</label>
+                    <input class="mt-1 w-full border rounded-sm py-2 px-4 {% if errors.has.name %}bg-red-100 border-red-600{% endif %}" type="text" name="name" value="{{ '' | old_input: 'name' }}" />
+                    {% if errors.has.name %}
+                    	<p class="mt-2 text-sm">
+                        	{{ 'fas fa-exclamation-circle' | fa: 'text-red-600 mr-1' }}
+                        	{{ errors.first.name }}
+                        </p>
+                    {% endif %}
+                </div>
+
+                <div class="w-full sm:w-1/2 px-2">
+                    <label class="block">{{ 'contact.form.email' | t }}</label>
+                    <input class="mt-1 w-full border rounded-sm py-2 px-4 {% if errors.has.email %}bg-red-100 border-red-600{% endif %}" type="email" name="email" value="{{ '' | old_input: 'email' }}" />
+                    {% if errors.has.email %}
+                    	<p class="mt-2 text-sm">
+                        	{{ 'fas fa-exclamation-circle' | fa: 'text-red-600 mr-1' }}
+                        	{{ errors.first.email }}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+
+			<div class="mt-4">
+                <label class="block">{{ 'contact.form.order_number' | t }}</label>
+            	<input class="mt-1 w-full border rounded-sm py-2 px-4 {% if errors.has.order_id %}bg-red-100 border-red-600{% endif %}" type="text" name="order_id" value="{{ '' | old_input: 'order_id' }}" />
+                    {% if errors.has.order_id %}
+                    	<p class="mt-2 text-sm">
+                        	{{ 'fas fa-exclamation-circle' | fa: 'text-red-600 mr-1' }}
+                        	{{ errors.first.order_id }}
+                        </p>
+                    {% endif %}
+            </div>
+
+
+            <!-- Optional -->
+			<div class="mt-4">
+                <label class="block">{{ 'contact.form.message' | t }}</label>
+            	<textarea class="mt-1 border rounded-sm p-4 w-full {% if errors.has.message %}bg-red-100 border-red-600{% endif %}" rows="6" name="message">{{ '' | old_input: 'message' }}</textarea>
+            </div>
+            {% if errors.has.message %}
+                <p class="mt-2 text-sm">
+                    {{ 'fas fa-exclamation-circle' | fa: 'text-red-600 mr-1' }}
+                    {{ errors.first.message }}
+                </p>
+            {% endif %}
+
+            <button class="mt-2 bg-black text-white py-2 px-8 rounded-sm text-sm uppercase font-semibold">{{ 'contact.form.submit' | t }}</button>
+
+            {{ csrf.field }}
+
+        </form>
+    </div>
+</section>
+{% endblock %}

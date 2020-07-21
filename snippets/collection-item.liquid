@@ -1,0 +1,23 @@
+<div class="w-1/2 md:w-1/4 p-2">
+	<a href="{{ product.url }}">
+    	<div class="relative">
+    		<div class="bg-cover bg-bottom" style="padding-top: 100%;"></div>
+            <div class="absolute inset-y-0 overflow-hidden w-full">
+            	<img
+                	class="lazyload object-cover block"
+                    data-src="{{ product | img_url: '164x' }}"
+                    data-srcset="{{ product | img_url: '164x' }} 164w,{{ product | img_url: '328x' }} 328w,{{ product | img_url: '600x' }} 600w"
+                    width="100%"
+                    height="100%"
+                    style="height: 100%; width: 100%"
+                >
+            </div>
+        </div>
+		<p class="mt-2 md:mt-4 md:text-lg font-bold">
+        	{{ product.title }}
+        </p>
+        <p class="text-sm md:text-base">
+			{{ product.price | money }}
+        </p>
+    </a>
+</div>

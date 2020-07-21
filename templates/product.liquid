@@ -1,0 +1,122 @@
+{% extends 'layout/theme' %}
+
+{% block head %}
+{% if product.images.size > 1 %}
+<link rel="prefetch" as="script" title="Carousel JS" href="{{ 'carousel.js' | asset_url }}">
+<link rel="stylesheet" href="{{ 'carousel.css' | asset_url }}">
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if product.images.size > 1 %}
+<script src="{{ 'carousel.js' | asset_url }}"></script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<product-script :product="{{ product | json | escape }}" selected-variant-id="{{ request.parameters.variant }}" inline-template>
+<section class="container mx-auto px-4 pt-8 pb-12 sm:py-12 flex flex-wrap">
+    <div class="w-full sm:w-1/2 sm:pr-4">
+		{% if product.images.size > 1 %}
+            <carousel :options="{
+                thumbs: true,
+                thumbsPrerendered: true,
+                nav: false,
+                dots: false,
+                items: 1,
+                autoHeight: true,
+            }">
+            {% for image in product.images %}
+                <img class="w-full"
+                    src="{{ image | img_url: '256x' }}"
+                    srcset="{{ image | img_url: '128x' }} 128w, {{ image | img_url: '256x' }} 256w, {{ image | img_url: '1216x' }} 1216w"
+                    alt="{{ image.alt | default: product.title }}"
+                    {% unless forloop.first %}
+                    style="display:none"
+                    v-show="true"
+                    {% endunless %}
+                >
+            {% endfor %}
+            </carousel>
+            <div class="owl-thumbs flex flex-wrap -mx-2 mb-4" data-slider-id="1">
+                {% for image in product.images %}
+                    <a href="#image" data-index="{{ forloop.index0 }}">
+                        <img
+                        	class="w-24 sm:w-32 mx-2 mt-4"
+                            src="{{ image | img_url: '256x' }}"
+                            srcset="{{ image | img_url: '96x' }} 96w, {{ image | img_url: '192x' }} 192w"
+                            alt="{{ image.alt | default: product.title }}"
+                        >
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <img class="w-full mb-4"
+                src="{{ product | img_url: '256x' }}"
+                srcset="{{ product | img_url: '128x' }} 128w, {{ product | img_url: '256x' }} 256w, {{ product | img_url: '1216x' }} 1216w"
+                alt="{{ product.featured_image.alt | default: product.title }}"
+            >
+        {% endif %}
+    </div>
+	<div class="w-full sm:w-1/2 sm:pl-4">
+    	<h1 class="text-3xl font-bold">
+        	{{ product.title }} 
+        </h1>
+        <h2 class="mt-2 font-semibold text-lg">
+            <span v-html="$root.money(price)" :class="compare_at_price > price ? 'text-red-600' : ''">{{ product.price }}</span>
+            <s
+            	v-show="compare_at_price > price"
+                {% unless product.discounted %}
+                style="display:none"
+                {% endunless %}
+            ><span v-html="$root.money(compare_at_price)">{{ product.compare_at_price }}</span></s>
+            <div
+            	v-show="compare_at_price > price"
+                {% unless product.discounted %}
+                style="display:none"
+                {% endunless %}
+                class="ml-2 uppercase bg-red-600 text-white rounded-sm text-xs inline-block font-normal px-2 py-1 leading-none"
+            >
+            	{{ 'products.product.on_sale' | t }}
+            </div>
+        </h2>
+        <p class="mt-2 text-sm">
+        	{{ 'products.product.include_taxes' | t }}
+        </p>
+        <form class="mt-8" action="/cart/add" method="post">
+        	<div class="mb-8 flex flex-wrap max-w-sm -mx-2">
+                <div class="flex-1 px-2" v-for="(optionSelect, selectKey) in optionSelects">
+                    <label class="block mb-1" v-text="optionSelect.label"></label>
+                    <div class="relative">
+                        <select class="w-full border py-3 px-6 rounded-sm appearance-none" v-model="chosenOptions[selectKey]">
+                                <option
+                                    :value="optionSelectValue"
+                                    v-for="optionSelectValue in optionSelect.values"
+                                    v-text="optionSelectValue || '{{ 'products.product.none' | t }}'"
+                                ></option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        	<svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        	<button v-show="available" class="uppercase border border-black rounded-sm text-black hover:text-gray-800 bg-white text-sm font-semibold py-3 w-full sm:max-w-sm">
+            	{{ 'products.product.add_to_cart' | t }}
+            </button>
+        	<button
+            	v-show="! available"
+                style="display:none"
+                type="button"
+                disabled="disabled"
+                class="uppercase border border-black rounded-sm text-black hover:text-gray-800 bg-white text-sm font-semibold py-3 w-full sm:max-w-sm" v-text="variant ? '{{ 'products.product.sold_out' | t }}' : '{{ 'products.product.unavailable' | t }}'"></button>
+            <input type="hidden" name="id" :value="variantId">
+            {{ csrf.field }}
+        </form>
+        <div class="mt-12 prose">
+        	{{ product.description }}
+        </div>
+    </div>
+</section>
+</product-script>
+{% endblock %}

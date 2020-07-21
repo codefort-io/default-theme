@@ -1,0 +1,15 @@
+{% extends 'layout/theme' %}
+
+{% block content %}
+<section class="container mx-auto max-w-3xl px-4 py-8 h-full flex flex-col justify-center items-center">
+    <h1 class="text-3xl md:text-4xl font-bold text-center">
+        {{ 'general.404.title' | t }}
+    </h1>
+    <div class="mt-4 prose-sm md:prose max-w-full md:max-w-full">
+		{{ 'general.404.subtext' | t }}
+    </div>
+    <a href="/" class="mt-4 bg-black hover:bg-gray-800 text-white px-6 py-3 inline-block rounded-sm text-sm uppercase">
+    	{{ 'general.404.link' | t }} {{ 'fal fa-long-arrow-right' | fa }}
+    </a>
+</section>
+{% endblock %}

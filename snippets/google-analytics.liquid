@@ -1,0 +1,60 @@
+{% assign googleAnalyticsPixel = shop.apps.google_analytics.id %}
+
+{% if googleAnalyticsPixel %}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ googleAnalyticsPixel }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '{{ googleAnalyticsPixel }}');
+</script>
+
+<script>
+{% if request.path contains "checkout/thanks/" %}
+{% if first_time_accessed %}
+    gtag('event', 'purchase', {
+      "transaction_id": "{{ order.order_number }}",
+      "affiliation": "{{ shop.name }}",
+      "value": {{ order.total_price | divided_by: 100 }},
+      "currency": "{{ order.currency }}",
+      "tax": {{ order.tax_price | divided_by: 100 }},
+      "shipping": {{ order.shipping_price | divided_by: 100 }},
+      "items": [
+      {% for line_item in order.line_items %}
+        {
+          "id": "{{ line_item.variant.id }}",
+          {% if product.has_only_default_variant %}
+              "name": "{{ line_item.variant.title }}",
+          {% else %}
+                    "name": "{{ line_item.product.title }} {{ line_item.variant.title }}",
+          {% endif %}
+          "brand": "{{ shop.name }}",
+          "category": "1000",
+          "variant": "{{ line_item.variant.title }}",
+          "quantity": {{ line_item.quantity }},
+          "price": {{ line_item.price | divided_by: 100 }}
+        },
+      {% endfor %}
+      ]
+    });
+{% endif %}
+{% endif %}
+
+
+{% if cart.just_added_item %}
+    gtag('event', 'add_to_cart', {
+        "items": [
+            {
+            "id": '{{ cart.just_added_item.variant.id }}',
+            "name": "{{ cart.just_added_item.variant.title }}",
+            "brand": "{{ shop.name }}",
+            "category": "1000",
+            "quantity": 1,
+            "price": '{{ cart.just_added_item.variant.price | divided_by: 100 }}'
+            }
+        ]
+    });
+{% endif %}
+</script>
+{% endif %}

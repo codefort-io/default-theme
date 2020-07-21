@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+<url>
+  <loc>https://debut-tailwind.codefort.io/</loc>
+  <lastmod>2020-07-21T02:09:14+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+{% for collection in collections %}
+<url>
+  <loc>{{ collection.url }}</loc>
+  <lastmod>2020-07-21T02:09:14+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+{% endfor %}
+{% for product in all_products %}
+<url>
+  <loc>{{ product.url }}</loc>
+  <lastmod>2020-07-21T02:09:14+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+{% endfor %}
+{% for article in blogs.blog.articles %}
+<url>
+  <loc>/blog/{{ article.handle }}</loc>
+  <lastmod>2020-07-21T02:09:14+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+{% endfor %}
+<url>
+  <loc>https://debut-tailwind.codefort.io/search</loc>
+  <lastmod>2020-07-21T02:09:14+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://debut-tailwind.codefort.io/blog</loc>
+  <lastmod>2020-07-21T02:09:14+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
+
+</urlset>

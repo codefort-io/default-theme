@@ -1,0 +1,87 @@
+[
+	{
+		"name": "General",
+		"settings": [
+            {
+    			"type": "text",
+    			"id": "favicon",
+    			"label": "Favicon"
+			},
+            {
+    			"type": "text",
+    			"id": "share_image",
+    			"label": "Share image (og:image)"
+			},
+            {
+    			"type": "checkbox",
+    			"id": "search_enabled",
+    			"label": "Enable search"
+			}
+        ]
+    },
+	{
+		"name": "Homepage",
+		"settings": [
+			{
+    			"type": "header",
+    			"content": "Hero"
+			},
+			{
+    			"type": "text",
+    			"id": "homepage_hero_image",
+    			"label": "Image URL"
+			},
+			{
+    			"type": "color",
+    			"id": "homepage_hero_bg_color",
+    			"label": "Background color"
+			},
+			{
+    			"type": "header",
+    			"content": "Featured product"
+			},
+			{
+    			"type": "product",
+    			"id": "homepage_featured_product_handle",
+    			"label": "Product"
+			},
+			{
+    			"type": "text",
+    			"id": "homepage_featured_product_image",
+    			"label": "Image"
+			},
+			{
+    			"type": "header",
+    			"content": "Featured collection"
+			},
+			{
+    			"type": "collection",
+    			"id": "homepage_featured_collection_handle",
+    			"label": "Collection"
+			},
+			{
+    			"type": "header",
+    			"content": "Banner"
+			},
+			{
+    			"type": "text",
+    			"id": "homepage_banner_image",
+    			"label": "Image"
+			},
+			{
+    			"type": "header",
+    			"content": "Reviews"
+			},
+			{
+    			"type": "text",
+    			"id": "homepage_reviews_data_object_handle",
+    			"label": "Data object"
+			},
+			{
+    			"type": "text",
+    			"id": "homepage_reviews_limit",
+    			"label": "Max reviews"
+			}
+        ]
+	}
+]

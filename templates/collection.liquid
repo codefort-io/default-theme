@@ -1,0 +1,20 @@
+{% extends 'layout/theme' %}
+
+{% block content %}
+<section class="container mx-auto px-2 py-8">
+    <h1 class="mx-2 text-4xl font-bold text-center">
+        {{ collection.title }}
+    </h1>
+    <div class="h-px bg-gray-300 my-8"></div>
+    <div class="flex flex-wrap">
+        {% for product in collection.products %}
+            {% include 'collection-item' %}
+        {% endfor %}
+    </div>
+</section>
+<section class="container mx-auto px-4 py-8">
+    <div class="prose max-w-full">
+		{{ collection.description }}
+    </div>
+</section>
+{% endblock %}
