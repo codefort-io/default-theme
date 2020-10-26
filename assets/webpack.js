@@ -1,5 +1,5 @@
-import Vue from 'vue'
-// import Vue from 'vue/dist/vue.esm.browser.js'
+// import Vue from 'vue'
+import Vue from 'vue/dist/vue.esm.browser.js'
 // import $ from 'jquery-slim'
 import _ from 'lodash'
 import axios from 'axios'

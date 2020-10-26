@@ -83,5 +83,67 @@
     			"label": "Max reviews"
 			}
         ]
-	}
+	},
+    {
+        "name": "Checkout",
+        "settings": [
+            {
+                "type": "header",
+                "content": "Customize the default checkout settings."
+            },
+            {
+                "type": "checkbox",
+                "id": "checkout_display_quick_checkouts",
+                "label": "Display quick checkouts"
+            },
+            {
+                "type": "checkbox",
+                "id": "checkout_display_country",
+                "label": "Display country dropdown"
+            },
+            {
+                "type": "text",
+                "id": "checkout_default_country",
+                "label": "Default country id"
+            },
+            {
+                "type": "checkbox",
+                "id": "checkout_display_shipping_method",
+                "label": "Display shipping method choice"
+            },
+            {
+                "type": "text",
+                "id": "checkout_default_shipping_rate",
+                "label": "Default shipping rate id",
+                "info": "Will only apply if you dont display the shipping method choice."
+            },
+            {
+                "type": "checkbox",
+                "id": "checkout_display_payment_method",
+                "label": "Display payment method choice"
+            },
+            {
+                "type": "text",
+                "id": "checkout_default_payment_method",
+                "label": "Default payment method handle",
+                "info": "Will only apply if you dont display the payment method choice."
+            },
+            {
+                "type": "checkbox",
+                "id": "checkout_display_totals",
+                "label": "Display totals"
+            },
+            {
+                "type": "checkbox",
+                "id": "checkout_display_terms",
+                "label": "Display terms and conditions checkbox"
+            },
+            {
+                "type": "page",
+                "id": "checkout_terms_page",
+                "label": "Terms and conditions page",
+                "info": "Will be used for content in the terms popup."
+            }
+        ]
+    }
 ]

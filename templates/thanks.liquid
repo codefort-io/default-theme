@@ -1,0 +1,84 @@
+{% extends 'layout/theme' %}
+
+{% block content %}
+<div class="container max-w-lg mx-auto my-24 px-4">
+	<h1 class="text-center text-3xl font-bold">Tak! Dit køb er gennemført.</h1>
+    <p class="text-center">
+    	Vi har sendt dig en mail med dine ordreinformationer til {{ order.email }}
+    </p>
+    
+    <div class="mt-8 border-b"></div>
+
+    <h3 class="border-b py-4">
+        Ordredetaljer
+    </h3>
+    <div class="flex justify-between border-b py-4">
+        <div>
+            Ordrenummer
+        </div>
+        <div>
+            {{ order.number }}
+        </div>
+    </div>
+    <div class="flex justify-between border-b py-4">
+        <div>
+            Email
+        </div>
+        <div>
+            {{ order.email }}
+        </div>
+    </div>
+    {% if order.phone %}
+    <div class="flex justify-between border-b py-4">
+        <div>
+            Telefon
+        </div>
+        <div>
+            {{ order.phone }}
+        </div>
+    </div>
+    {% endif %}
+    <div class="flex justify-between border-b py-4 mb-4">
+        <div>
+            Faktureringsadresse
+        </div>
+        <div class="text-right">
+            {{ order.billing_address.name }} <br>
+            {{ order.billing_address.street }} <br>
+            {{ order.billing_address.zip }} {{ order.billing_address.city }} <br>
+            {{ order.billing_address.country }}
+        </div>
+    </div>
+    {% for row in order.line_items %}
+    	<div class="flex justify-between pb-1">
+            <div>
+                {{ row.title }}
+            </div>
+            <div>
+                {{ row.line_price | money }}
+            </div>
+    	</div>
+    {% endfor %}
+    <div class="flex justify-between border-b pb-4">
+        <div>
+            Fragt
+        </div>
+        <div>
+            {{ order.shipping_price | money }}
+        </div>
+    </div>
+    <div class="flex justify-between border-b py-4 font-bold text-lg">
+        <div>
+            Total
+        </div>
+        <div>
+            {{ order.total_price | money }}
+        </div>
+    </div>
+    
+	<p class="text-center mt-16 text-sm">
+    	Hvis du har spørgsmål eller ændringer til din ordre, er du altid velkommen til at kontakte vores kundeservice via e-mail {{ shop.email }}
+    </p>
+</div>
+
+{% endblock %}

@@ -1,7 +1,7 @@
 module.exports = {
-  purge: [
-    'theme.html',
-  ],
+  //purge: [
+  //  'theme.html',
+  //],
   target: 'relaxed',
   prefix: '',
   important: false,

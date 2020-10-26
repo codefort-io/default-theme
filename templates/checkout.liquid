@@ -1,17 +1,281 @@
 {% extends 'layout/theme' %}
 
+{% block head %}
+<script>
+	var vueShippingMethods = {{ checkout.shipping_options_filtered | json }};
+</script>
+{% endblock %}
+
 {% block content %}
-<section class="container mx-auto px-4 pt-8 pb-12 sm:py-12">
-    <h1 class="text-3xl font-bold text-center">
-        Checkout
-    </h1>
-    <div class="mt-4 text-center">
-    	<p>
-			No checkouts available.
-        </p>
-        <a href="/cart" class="mt-8 w-full sm:w-auto inline-block uppercase bg-black hover:bg-gray-800 py-3 sm:py-2 px-4 text-white text-sm font-medium rounded-sm">
-            {{ 'cart.general.continue_shopping' | t }}  {{ 'fal fa-long-arrow-right' | fa: 'fa-lg ml-2' }}
-        </a>
-    </div>
-</section>
+
+{%- if cart.item_count == 0 -%}
+     {{ '/cart' | force_redirect }}
+{%- endif -%}
+<checkout
+    initial-zip="{{ '' | old_input: 'zip' }}"
+    initial-country="{{ settings.checkout_default_country | old_input: 'country' }}"
+    initial-shipping-method="{{ '' | old_input: 'shipping_method' }}"
+    initial-payment-method="{{ checkout.payment_methods | first | get: 'handle' | old_input: 'payment_method' }}"
+    inline-template>
+    
+    <section class="container mx-auto px-4 py-8 sm:py-12">
+        <h1 class="text-2xl sm:text-3xl font-bold mb-4">
+            Gennemfør din ordre
+        </h1>
+
+        {%- if settings.checkout_display_quick_checkouts -%}
+            <a href="/checkout/klarna" class="bg-pink-400 font-medium inline-block px-6 py-2 text-white">
+                Quick checkout with Klarna
+            </a>
+            <p class="mt-4">
+                Or enter your details manually below.
+            </p>
+        {%- endif -%}
+
+        {%- if errors.any -%}
+            <div class="mt-8">
+                {%- for error in errors.all -%}
+                    <div>
+                        <div class="bg-red-100 border border-red-500 inline-block mb-3 px-2 py-1 rounded-sm text-red-700 text-sm text-white">
+                    		{{ 'fas fa-exclamation-circle' | fa: 'text-red-600 mr-1' }}
+                            {{ error }}
+                        </div>
+                    </div>
+                {%- endfor -%}
+            </div>
+        {%- endif -%}
+
+        <form role="form" method="POST" action="/checkout" @submit="submitting = true" class="flex flex-wrap">
+
+			<div class="w-full md:w-1/2 md:pr-4">
+            <label class="block mt-4">Name</label>
+            <input class="mt-1 w-full border rounded-sm py-2 px-4 {% if errors.has.name %}bg-red-100 border-red-600{% endif %}" type="text" name="name" value="{{ '' | old_input: 'name' }}" />
+            {% if errors.has.name %}
+                <p class="block mt-2 text-sm">
+                    {{ 'fas fa-exclamation-circle' | fa: 'text-red-600 mr-1' }}
+                    {{ errors.first.name }}
+                </p>
+            {% endif %}
+
+            <label class="block mt-4">Address</label>
+            <input class="mt-1 w-full border rounded-sm py-2 px-4 {% if errors.has.street %}bg-red-100 border-red-600{% endif %}" type="text" name="street" value="{{ '' | old_input: 'street' }}" />
+            {% if errors.has.street %}
+                <p class="block mt-2 text-sm">
+                    {{ 'fas fa-exclamation-circle' | fa: 'text-red-600 mr-1' }}
+                    {{ errors.first.street }}
+                </p>
+            {% endif %}
+
+            <div class="flex">
+                <div class="pr-4 w-32 lg:w-48">
+                    <label class="block mt-4">Zip</label>
+                    <input class="mt-1 w-full border rounded-sm py-2 px-4 {% if errors.has.zip %}bg-red-100 border-red-600{% endif %}" type="text" name="zip" value="{{ '' | old_input: 'zip' }}" />
+                    {% if errors.has.zip %}
+                        <p class="block mt-2 text-sm">
+                            {{ 'fas fa-exclamation-circle' | fa: 'text-red-600 mr-1' }}
+                            {{ errors.first.zip }}
+                        </p>
+                    {% endif %}
+                </div>
+                <div class="flex-1">
+                    <label class="block mt-4">City</label>
+                    <input class="mt-1 w-full border rounded-sm py-2 px-4 {% if errors.has.city %}bg-red-100 border-red-600{% endif %}" type="text" name="city" value="{{ '' | old_input: 'city' }}" />
+                    {% if errors.has.city %}
+                        <p class="block mt-2 text-sm">
+                            {{ 'fas fa-exclamation-circle' | fa: 'text-red-600 mr-1' }}
+                            {{ errors.first.city }}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+
+
+            {%- if settings.checkout_display_country -%}
+                <label class="block mt-4">Land</label>
+
+                <div class="relative">
+                    <select class="mt-1 block appearance-none w-full bg-white border p-2 pr-8 rounded-sm" name="country" v-model="country">
+                        {%- for country in checkout.countries -%}
+                            <option value="{{ country.id }}">{{ country.name }}</option>
+                        {%- endfor -%}
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+
+                {% if errors.has.phone %}
+                    <p class="block mt-2 text-sm">
+                        {{ 'fas fa-exclamation-circle' | fa: 'text-red-600 mr-1' }}
+                        {{ errors.first.phone }}
+                    </p>
+                {% endif %}
+            {%- else -%}
+                <input type="hidden" name="country" value="{{ settings.checkout_default_country }}">
+            {%- endif -%}
+
+            <label class="block mt-4">Telefon</label>
+            <input class="mt-1 w-full border rounded-sm py-2 px-4 {% if errors.has.phone %}bg-red-100 border-red-600{% endif %}" type="tel" name="phone" value="{{ '' | old_input: 'phone' }}" />
+            {% if errors.has.phone %}
+                <p class="block mt-2 text-sm">
+                    {{ 'fas fa-exclamation-circle' | fa: 'text-red-600 mr-1' }}
+                    {{ errors.first.phone }}
+                </p>
+            {% endif %}
+
+            <label class="block mt-4">Email</label>
+            <input class="mt-1 w-full border rounded-sm py-2 px-4 {% if errors.has.email %}bg-red-100 border-red-600{% endif %}" type="email" name="email" value="{{ '' | old_input: 'email' }}" />
+            {% if errors.has.email %}
+                <p class="block mt-2 text-sm">
+                    {{ 'fas fa-exclamation-circle' | fa: 'text-red-600 mr-1' }}
+                    {{ errors.first.email }}
+                </p>
+            {% endif %}
+
+			</div>
+			<div class="w-full md:w-1/2 md:pl-4">
+
+                {%- if settings.checkout_display_shipping_method -%}
+                <label class="block mt-4">Leveringsmetode</label>
+                <div v-for="shippingMethod in filteredShippingMethods" class="my-2 border rounded-sm">
+                    <label class="flex items-center cursor-pointer">
+                        <input class="ml-4 mr-2" type="radio" name="shipping_method" v-model="shipping_method" :value="shippingMethod.id">
+                        <div class="p-4 flex w-full items-center justify-between rounded">
+                            <span class="flex ml-4 items-center" v-text="shippingMethod.description">&nbsp;</span>
+                            <span class="flex-shrink-0" v-html="shippingMethod.price == 0 ? 'Free' : $root.money(shippingMethod.price)">
+                            </span>
+                        </div>
+                    </label>
+                    <div class="p-2" v-if="shipping_method == shippingMethod.id && shippingMethod.stores !== null">
+                        <div class="border-t mb-2"></div>
+                        <div v-if="validZip">
+                            <div v-if="shippingLoading" class="bg-yellow-300 p-2">
+                                Searching for a pickup point near you. Please wait...
+                            </div>
+                            <div v-if="! shippingLoading">
+                                <label v-for="store in shippingMethod.stores" class="block m-2">
+                                    <input type="radio" :value="store.id" v-model="shipping_pickup_point">
+                                    <span class="ml-2" v-html="store.address_1 + ' - ' + store.city"></span>
+                                </label>
+                                <div v-if="shippingMethod.stores.length == 0" class="bg-yellow-300 p-2">
+                                    No pickup point found. Did you enter a correct zipcode?
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else class="bg-yellow-300 p-2">
+                            Please enter a valid zipcode to search for pickup points.
+                        </div>
+                    </div>
+                </div>
+                {%- else -%}
+                    <input type="hidden" name="shipping_method" value="{{ settings.checkout_default_shipping_rate }}">
+                {%- endif -%}
+
+                {%- if settings.checkout_display_payment_method -%}
+                <label class="block mt-4">Betalingsmetode</label>
+                <div class="flex flex-col ">
+                    {%- for payment_method in checkout.payment_methods -%}
+                    <label class="flex items-center my-2 border cursor-pointer rounded-sm">
+                        <input
+                            class="ml-4 mr-2"
+                            type="radio"
+                            name="payment_method"
+                            v-model="payment_method"
+                            value="{{ payment_method.handle }}"
+                        >
+                        <div class="py-4 pr-4 flex w-full items-center justify-between">
+                            <span class="flex flex-1 items-center">                                                                                           {%- include 'payment-logos' -%}
+                            </span>
+                            <span>{{ payment_method.title }}</span>
+                        </div> 
+                    </label>
+                    {%- endfor -%}                                        
+                </div>
+                {%- else -%}
+                    <input type="hidden" name="payment_method" value="{{ settings.checkout_default_payment_method }}">
+                {%- endif -%}
+
+                {%- if settings.checkout_display_totals -%}
+                <div class="bg-gray-200 mt-4 p-4 rounded-md">
+                    <table class="w-full">
+                        <tr>
+                            <td class="py-1">Subtotal</td>
+                            <td class="text-right pl-8 py-1">{{ cart.total_price | money }}</td>
+                        </tr>
+                        {%- if cart.total_discount > 0 -%}
+                        <tr>
+                            <td class="py-1">Discount</td>
+                            <td class="text-right pl-8 py-1">
+                                {{ cart.total_discount | money }}
+                            </td>
+                        </tr>
+                        {%- endif -%}
+                        <tr>
+                            <td class="pt-1 pb-3">Fragt</td>
+                            <td class="text-right pl-8 pt-1 pb-3">
+                                <span v-html="$root.money(shippingPrice)">{{ 0 | money }}</span>
+                            </td>
+                        </tr>
+                        <tr class="text-2xl border-t-2 border-white">
+                            <td class="pt-3">Total</td>
+                            <td class="text-right pl-8 pt-3">
+                                <span v-html="$root.money(totalPrice)">{{ cart.total_price | money }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                {%- endif -%}
+
+                {%- if settings.checkout_display_terms -%}
+                <div class="mt-6">
+                    <label class="flex items-baseline">
+                        <input v-model="terms" type="checkbox">
+                        <toggler inline-template>
+                        <div class="ml-2">
+                            Jeg har læst og accepteret <a class="underline" href="#toggle" @click.prevent="toggle()">betingelserne.</a>
+
+                            {%- assign termsPage = pages | get: settings.checkout_terms_page -%}
+                            <div style="display:none; background: rgba(0,0,0,0.5)" v-show="toggled" class="bg-smoke-light fixed inset-0 z-10 overflow-auto flex p-4" role="dialog" @click.prevent="toggle()">
+                                <div class="relative p-4 bg-white w-full max-w-xl m-auto z-40" @click.stop>
+                                    <div class="flex justify-between leading-none">
+                                        <h1 class="text-xl font-bold">
+                                            {{- termsPage.title -}}
+                                        </h1>
+                                        <a class="block" href="#close" @click.prevent="toggle()">
+                                            {{ 'far fa-times' | fa: 'fa-lg' }}
+                                        </a>
+                                    </div>
+                                    <div class="mt-2 prose">
+                                        {{- termsPage.content -}}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        </toggler>
+                    </label>
+                    {% if errors.has.terms %}
+                        <p class="block mt-2 text-sm text-red-600">
+                            {{ 'fas fa-exclamation-circle' | fa: 'text-red-600 mr-1' }}
+                            {{ errors.first.terms }}
+                        </p>
+                    {% endif %}
+                </div>
+                <input type="hidden" name="terms" value="1" v-if="terms">
+                {%- else -%}
+                    <input type="hidden" name="terms" value="1">
+                {%- endif -%}
+
+                <button v-if="! submitting" type="submit" class="w-full max-w-sm mt-6 inline-block bg-orange-500 hover:bg-orange-400 text-white px-6 py-6 rounded-sm">
+                    Fortsæt til betaling
+                </button>
+                <button v-else type="button" class="w-full max-w-sm mt-6 inline-block bg-gray-400 text-white px-6 py-6 rounded-sm cursor-not-allowed" disabled="disabled">
+                    Vent venligst...
+                </button>
+
+                {{ csrf.field }}
+            </div>
+        </form>
+    </section>
+</checkout>
 {% endblock %}
