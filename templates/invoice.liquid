@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title> {{ 'invoice.title' | t }} {{ order.order_number }}</title>
+    <style>
+      .clearfix:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+      a {
+        color: #5D6975;
+        text-decoration: underline;
+      }
+
+      body {
+        position: relative;
+        width: 100%;
+        max-width: 21cm;
+        height: 29.7cm; 
+        margin: 0 auto; 
+        color: #001028;
+        background: #FFFFFF; 
+        font-family: Helvetica;
+        font-size: 12px; 
+      }
+
+      header {
+        padding: 10px 0;
+        margin-bottom: 30px;
+      }
+
+      #logo {
+        float:left;
+        width: 20%;
+        text-align: center;
+      }
+
+      #logo img {
+        width: 100%;
+      }
+
+      #order-info {
+        float:left;
+        width: 40%;
+      }
+
+      #order-info span {
+        color: #5D6975;
+        text-align: right;
+        width: 52px;
+        margin-right: 10px;
+        display: inline-block;
+        font-size: 0.8em;
+      }
+
+      #customer {
+        float:left;
+        width: 40%;
+        text-align: right;
+      }
+
+      #order-info div,
+      #customer div {
+        white-space: nowrap;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        margin-bottom: 20px;
+      }
+
+      table tr:nth-child(2n-1) td {
+        background: #F5F5F5;
+      }
+
+      table th,
+      table td {
+        text-align: center;
+      }
+
+      table th {
+        padding: 5px 20px;
+        color: #5D6975;
+        border-bottom: 1px solid #C1CED9;
+        white-space: nowrap;        
+        font-weight: normal;
+      }
+
+      table td {
+        padding: 15px;
+      }
+
+      table td.total {
+        border-top: 1px solid #5D6975;;
+        border-bottom: 1px solid #5D6975;;
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+
+      footer {
+        color: #5D6975;
+        width: 100%;
+        height: 30px;
+        position: absolute;
+        bottom: 0;
+        border-top: 1px solid #C1CED9;
+        padding: 8px 0;
+        text-align: center;
+      }
+      .product-image {
+        width: auto;
+        height: 40px;
+      }
+
+      .text-left {
+        text-align: left;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .text-right {
+        text-align: right;
+      }
+    </style>
+</head>
+<body>
+    <header class="clearfix">
+      <div id="order-info">
+      	<h-1>
+        	{{ 'invoice.billing' | t }}
+        </h-1>
+        <h2>#{{ order.order_number }}</h2>
+        <div>{{ order.created_at }}</div>
+      </div>
+      <div id="logo">
+      </div>
+      <div id="customer">
+        <h2>{{ order.name }}</h2>
+        <div>
+          {{ order.billing_address.street }}<br>
+          {{ order.billing_address.zip }} {{ order.billing_address.city}}, {{ order.billing_address.country }}
+        </div>
+        <br>
+        <div>{{ order.phone }}</div>
+        <div>{{ order.email }}</div>
+      </div>
+    </header>
+    <main>
+      <table>
+        <thead>
+          <tr>
+            <th class="text-left">
+				{{ 'invoice.product' | t }}
+            </th>
+            <th>
+				{{ 'invoice.price' | t }}
+            </th>
+            <th>
+				{{ 'invoice.amount' | t }}
+            </th>
+            <th class="text-right">
+				{{ 'invoice.subtotal' | t }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {% for line_item in order.line_items %}
+            <tr>
+              <td class="text-left">
+                {{ line_item.title }}<br>
+                {% if line_item.sku) %}
+                  <small>SKU: {{ line_item.sku }}</small>
+                {% endif %}
+              </td>
+              <td>{{ line_item.price | money }}</td>
+              <td>{{ line_item.quantity }}</td>
+              <td class="text-right">{{ line_item.line_price | money }}</td>
+            </tr>
+          {% endfor %}
+          <tr>
+            <td colspan="3" class="text-right">
+				{{ order.shipping_description }}
+            </td>
+            <td class="text-right">{{ order.shipping_price | money }}</td>
+          </tr>
+          <tr>
+            <td colspan="3" class="text-right">
+             {{ 'invoice.tax' | t }}
+            </td>
+            <td class="text-right">{{ order.tax_price | money }}</td>
+          </tr>
+          <tr>
+            <td colspan="3" class="text-right">
+              {{ 'invoice.total' | t }}
+            </td>
+            <td class="text-right total">{{ order.total_price | money }}</td><br>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+    <footer>
+		{{ 'invoice.footer-info' | t }}
+    </footer>
+</body>
+</html>

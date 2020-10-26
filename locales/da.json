@@ -108,5 +108,16 @@
       "include_taxes": "Inklusive moms.",
       "none": "Ikke valgt"
     }
+  },
+  "invoice": {
+      "title": "Faktura",
+      "billing": "Faktura",
+      "product": "Produkt",
+      "price": "Pris",
+      "amount": "Antal",
+      "subtotal": "Total",
+      "tax": "Heraf moms (25%)",
+      "total": "Total",
+      "footer-info": "Company ApS DKXXXXXXXX | Eksempelvej 123, 8660 Skanderborg, DK | support@example.org"
   }
 }
