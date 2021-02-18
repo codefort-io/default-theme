@@ -12,20 +12,20 @@
     'https://connect.facebook.net/en_US/fbevents.js');
 
         fbq('init', '{{ facebookPixel }}');
-        fbq('track', 'PageView');
+        fbq('track', 'PageView', {}, {eventID: '{{ shop.apps.facebook_pixel.event_id }}'});
 
     {% if request.path contains 'products/' %}
-        fbq('track', 'ViewContent', {value: '{{ product.price | divided_by: 100 }}', currency: '{{ shop.currency }}', content_name: '{{ product.title }}', content_type: 'product', content_ids: [{% for variant in product.variants %}{{ variant.id }}{% unless forloop.last %},{% endunless %}{% endfor %}]});
+        fbq('track', 'ViewContent', {value: '{{ product.price | divided_by: 100 }}', currency: '{{ shop.currency }}', content_name: '{{ product.title }}', content_type: 'product', content_ids: [{% for variant in product.variants %}{{ variant.id }}{% unless forloop.last %},{% endunless %}{% endfor %}]}, {eventID: '{{ shop.apps.facebook_pixel.event_id }}'});
     {% endif %}
 
     {% if request.path contains 'checkout' %}
     {% unless request.path contains 'checkout/thanks/' %}
-        fbq('track', 'InitiateCheckout', {value: {{ cart.total_price | divided_by: 100 }}, currency: '{{ shop.currency }}', num_items: {{ cart.item_count }}, content_ids: [{% for row in cart.items %}{{ row.variant.id }}{% unless forloop.last %},{% endunless %}{% endfor %}]});
+        fbq('track', 'InitiateCheckout', {value: {{ cart.total_price | divided_by: 100 }}, currency: '{{ shop.currency }}', num_items: {{ cart.item_count }}, content_ids: [{% for row in cart.items %}{{ row.variant.id }}{% unless forloop.last %},{% endunless %}{% endfor %}]}, {eventID: '{{ shop.apps.facebook_pixel.event_id }}'});
     {% endunless %}
     {% endif %}
 
     {% if request.path contains 'checkout/thanks/' and first_time_accessed %}
-        fbq('track', 'Purchase', {value: '{{ order.total_price | divided_by: 100 }}', currency: '{{ shop.currency }}', content_type: 'product', content_ids: [{% for row in order.line_items %}{{ row.variant.id }}{% unless forloop.last %},{% endunless %}{% endfor %}]});
+        fbq('track', 'Purchase', {value: '{{ order.total_price | divided_by: 100 }}', currency: '{{ shop.currency }}', content_type: 'product', content_ids: [{% for row in order.line_items %}{{ row.variant.id }}{% unless forloop.last %},{% endunless %}{% endfor %}]}, {eventID: '{{ shop.apps.facebook_pixel.event_id }}'});
     {% endif %}
 
     {% if cart.just_added_item %}
@@ -34,11 +34,11 @@
             currency: '{{ shop.currency }}',
             content_ids: ['{{ cart.just_added_item.variant.id }}'],
             content_type: 'product'
-        });
+        }, {eventID: '{{ shop.apps.facebook_pixel.event_id }}'});
     {% endif %}
 
 </script>
 <noscript>
-    <img height="1" width="1" src="https://www.facebook.com/tr?id={{ facebookPixel }}&ev=PageView&noscript=1"/>
+    <img height="1" width="1" src="https://www.facebook.com/tr?id={{ facebookPixel }}&ev=PageView&noscript=1&eid={{ shop.apps.facebook_pixel.event_id }}"/>
 </noscript>
 {% endif %}
